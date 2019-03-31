@@ -24,7 +24,7 @@ public class ServiceActivator {
 
 		} catch (Throwable e) {
 			ServiceLogger.error("WebRpt interrupted incorrectly.");
-			ServiceLogger.trace(e.getStackTrace());
+			ServiceLogger.trace(e);
 		} finally {
 			// ログサービスを終了
 			ServiceLogger.info("WebRpt end.");

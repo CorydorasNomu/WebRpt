@@ -59,6 +59,7 @@ public class ConstSet {
 	public enum Util {
 		SPACE(" "),
 		EMPTY(""),
+		ATB("\t"),
 		NEW_LINE(System.lineSeparator()),
 		UTF8("UTF-8"),
 		DIR_TIMESTAMP("MMdd_HHmmss"),

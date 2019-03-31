@@ -91,9 +91,11 @@ public class ServiceLogger {
 	 * スタックトレースの内容をバッファに書き込む。
 	 * @param e スタックトレース
 	 */
-	public static void trace(StackTraceElement[] elm) {
-		for(StackTraceElement e : elm) {
-			logBuilder.append(e.toString());
+	public static void trace(Throwable t) {
+		logBuilder.append(t.toString() + Util.NEW_LINE.get());
+		StackTraceElement[] elm = t.getStackTrace();
+		for(StackTraceElement  e : elm) {
+			logBuilder.append(Util.ATB.get() + e.toString() + Util.NEW_LINE.get());
 		}
 	}
 
