@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.Stream;
 
+import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet;
 import com.nmr.app.util.ConstSet.Util;
 
@@ -24,7 +25,7 @@ public class ReportServiceMgr {
 	/**
 	 * コンストラクタ
 	 */
-	public ReportServiceMgr() {
+	public ReportServiceMgr() throws IOException {
 		ConfigAccessService.init();
 	}
 
@@ -35,7 +36,7 @@ public class ReportServiceMgr {
 	 */
 	public void create(Stream<Path> dirStream) throws IOException {
 		// レポート出力ディレクトリの作成
-		Files.createDirectory(getReportDirPath());
+		createDirectory();
 		// HTMLサービスの生成
 		HTMLService htmlService = new HTMLService(getReportDirPath());
 
@@ -47,13 +48,10 @@ public class ReportServiceMgr {
 		htmlService.createHTML();
 	}
 
-	/**
-	 * レポート出力ディレクトリのパスを取得。
-	 * @return path レポート出力ディレクトリのパス
-	 */
+	// レポート出力ディレクトリのパスを取得
 	private Path getReportDirPath() {
-		// 一意のディレクトリ名を日時から生成
-		SimpleDateFormat sdf = new SimpleDateFormat(Util.TIME_FORMAT.get());
+		// ディレクトリ名のタイムスタンプ部を生成
+		SimpleDateFormat sdf = new SimpleDateFormat(Util.DIR_TIMESTAMP.get());
 		String date = sdf.format(new Date(System.currentTimeMillis()));
 
 		// ディレクトリ名を生成
@@ -66,5 +64,14 @@ public class ReportServiceMgr {
 		}
 
 		return Paths.get(str + reportDirName);
+	}
+
+	private void createDirectory() throws IOException {
+		try {
+			Files.createDirectory(getReportDirPath());
+		} catch(IOException e) {
+			ServiceLogger.error("Fail to create a report directory. Target Path: " + getReportDirPath().toString());
+			throw e;
+		}
 	}
 }

@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.nmr.app.log.ServiceLogger;
+
 /**
  * ファイルアクセスの共通処理が定義されるクラス。
  *
@@ -21,7 +23,14 @@ public class CommonFileAccessService {
 	 * @throws IOException 解析に失敗
 	 */
 	public static List<String> getLines(String path) throws IOException {
-		return Files.lines(Paths.get(path),
-				StandardCharsets.UTF_8).collect(Collectors.toList());
+		List<String> contents = null;
+		try {
+			contents = Files.lines(Paths.get(path),
+					StandardCharsets.UTF_8).collect(Collectors.toList());
+		} catch(IOException e) {
+			ServiceLogger.error("Fail to get contents of the file.");
+			throw e;
+		}
+		return contents;
 	}
 }

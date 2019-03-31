@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet;
 import com.nmr.app.util.ConstSet.Extension;
 import com.nmr.app.util.ConstSet.Regex;
@@ -86,6 +87,9 @@ public class HTMLService extends CommonFileAccessService {
 		try(FileWriter fw = new FileWriter(cssPath)) {
 			// スタイルシートの内容には変更がないので、リソースの中身をそのまま出力
         	fw.write(ResourceAccessService.getCSSContents());
+        } catch(IOException e) {
+        	ServiceLogger.error("Fail to create FileWriter object. Target Path: " + cssPath.toString());
+        	throw e;
         }
 	}
 
@@ -114,11 +118,14 @@ public class HTMLService extends CommonFileAccessService {
 	    	// レポートページの出力
 	    	try(FileWriter fw = new FileWriter(idx.getPath())) {
 	    		fw.write(contents);
+	    	} catch(IOException e) {
+	    		ServiceLogger.error("Fail to create FileWriter object. Target Path: " + idx.getPath().toString());
+	    		throw e;
 	    	}
 		}
 	}
 
-	private void setLink(int index) throws IOException {
+	private void setLink(int index) {
 		// 置換対象文字列
 		String targetPrev = Replace.TAG.get() + Replace.PREV.get() + Replace.TAG.get();
 		String targetNext = Replace.TAG.get() + Replace.NEXT.get() + Replace.TAG.get();

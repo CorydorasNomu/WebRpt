@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet.Extension;
 
 /**
@@ -43,11 +44,14 @@ public class DataFileAccessService {
 				if(fileName.endsWith(Extension.JPG.get()) || fileName.endsWith(Extension.PNG.get()))
 					imgs.add(p.toAbsolutePath());	// 画像のパスを取得
 				if(INFO_TXT.equals(fileName))
-					info = p.toAbsolutePath();		// 付帯情報のパスを取得
+					info = p.toAbsolutePath();			// 付帯情報のパスを取得
 			};
 
 			files.filter(p -> p.toFile().isFile())
 				.forEach(set);
+		} catch(IOException e) {
+			ServiceLogger.error("Fail to get file path list of a data directory.");
+			throw e;
 		}
 	}
 

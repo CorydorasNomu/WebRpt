@@ -4,12 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Collectors;
 
+import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet.Util;
 
 /**
@@ -60,18 +57,10 @@ public class ResourceAccessService extends CommonFileAccessService {
 		try(BufferedReader br = new BufferedReader(
 				new InputStreamReader(in, Util.UTF8.get()))) {
 			contents = br.lines().collect(Collectors.joining(Util.NEW_LINE.get()));
+		} catch(IOException e) {
+			ServiceLogger.error("Fail to get InputStream of resources in a jar.");
+			throw e;
 		}
 		return contents;
-	}
-
-	/**
-	 * ファイル内容の各行をリストで取得。
-	 * @param path ファイルのパス
-	 * @return ファイル内容の各行を保持したリスト
-	 * @throws IOException ファイル内容の取得に失敗
-	 */
-	protected List<String> getFileLines(String path) throws IOException {
-		return Files.lines(Paths.get(path),
-								StandardCharsets.UTF_8).collect(Collectors.toList());
 	}
 }

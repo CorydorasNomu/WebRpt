@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet.Util;
 
 public class InfoAccessService extends CommonFileAccessService {
@@ -65,6 +66,7 @@ public class InfoAccessService extends CommonFileAccessService {
 			KEY_LIST.forEach(k -> {
 				valsMap.put(k, null);
 			});
+			ServiceLogger.warn("You have no params in \"info.txt\".");
 		}
 		return valsMap;
 	}

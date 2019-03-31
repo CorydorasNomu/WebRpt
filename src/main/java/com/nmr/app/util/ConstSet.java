@@ -28,7 +28,8 @@ public class ConstSet {
 		JPG(".jpg"),
 		PNG(".png"),
 		INI(".ini"),
-		TXT(".txt");
+		TXT(".txt"),
+		LOG(".log");
 
 		private final String str;
 
@@ -60,7 +61,9 @@ public class ConstSet {
 		EMPTY(""),
 		NEW_LINE(System.lineSeparator()),
 		UTF8("UTF-8"),
-		TIME_FORMAT("MMdd_HHmmss");
+		DIR_TIMESTAMP("MMdd_HHmmss"),
+		LOG_TIMESTAMP_DATE("yyy-MM-dd"),
+		LOG_TIMESTAMP_TIME("HH:mm:ss.SSS");
 
 		private final String str;
 
