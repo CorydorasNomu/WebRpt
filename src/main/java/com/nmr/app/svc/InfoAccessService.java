@@ -59,7 +59,13 @@ public class InfoAccessService extends CommonFileAccessService {
 			// パラメタ値をfloat変換してマップに格納
 			String[] valsArray = vals.split(VAL_SEPARATOR);
 			for(int i = 0; i < valsArray.length; i++) {
-				valsMap.put(KEY_LIST.get(i), Float.parseFloat(valsArray[i]));
+				try {
+					valsMap.put(KEY_LIST.get(i), Float.parseFloat(valsArray[i]));
+				} catch(RuntimeException e) {
+					ServiceLogger.error("Value at [" + (i+1) + "] has been converted to \"0\".");
+					ServiceLogger.trace(e);
+					valsMap.put(KEY_LIST.get(i), new Float(0));
+				}
 			}
 		} else {
 			// パラメタ値がない場合は空の値をセット
