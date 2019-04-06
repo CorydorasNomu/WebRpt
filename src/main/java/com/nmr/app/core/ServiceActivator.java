@@ -23,8 +23,7 @@ public class ServiceActivator {
 			new ReportServiceMgr().create(Files.list(ConfigAccessService.getWorkingDirPath()));
 
 		} catch (Throwable e) {
-			ServiceLogger.error("WebRpt interrupted incorrectly.");
-			ServiceLogger.trace(e);
+			ServiceLogger.error("WebRpt interrupted incorrectly.", e);
 		} finally {
 			// ログサービスを終了
 			ServiceLogger.info("WebRpt end.");

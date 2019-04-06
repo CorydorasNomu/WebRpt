@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 import com.nmr.app.log.ServiceLogger;
-import com.nmr.app.util.ConstSet.Util;
+import com.nmr.app.util.ConstSet.Common;
 
 /**
  * jar内に抱え込んでいるリソースファイルへのアクセサクラス。
@@ -53,10 +53,10 @@ public class ResourceAccessService extends CommonFileAccessService {
 	}
 
 	private static String convert(InputStream in) throws IOException {
-		String contents = Util.EMPTY.get();
+		String contents = Common.EMPTY.get();
 		try(BufferedReader br = new BufferedReader(
-				new InputStreamReader(in, Util.UTF8.get()))) {
-			contents = br.lines().collect(Collectors.joining(Util.NEW_LINE.get()));
+				new InputStreamReader(in, Common.UTF8.get()))) {
+			contents = br.lines().collect(Collectors.joining(Common.NEW_LINE.get()));
 		} catch(IOException e) {
 			ServiceLogger.error("Fail to get InputStream of resources in a jar.");
 			throw e;

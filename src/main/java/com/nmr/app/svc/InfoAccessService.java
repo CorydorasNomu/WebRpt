@@ -3,12 +3,13 @@ package com.nmr.app.svc;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import com.nmr.app.log.ServiceLogger;
-import com.nmr.app.util.ConstSet.Util;
+import com.nmr.app.util.ConstSet.Common;
+import com.nmr.app.util.ConstSet.TABLE_HEADER;
+import com.nmr.app.util.ConstSet.TABLE_VALUE;
 
 public class InfoAccessService extends CommonFileAccessService {
 
@@ -28,14 +29,13 @@ public class InfoAccessService extends CommonFileAccessService {
 		}
 	}
 	// パラメタ値のキーのMap
-	private static final ArrayList<String> KEY_LIST = new ArrayList<>(
-			Arrays.asList("KEY_0", "KEY_1", "KEY_2", "KEY_3", "KEY_4", "KEY_5", "KEY_6", "KEY_7", "KEY_8"));
+	private static ArrayList<String> tableKeyList = null;
 	// パラメタ値のセパレタ
-	private static final String VAL_SEPARATOR = Util.SPACE.get();
+	private static final String VAL_SEPARATOR = Common.SPACE.get();
 	// パラメタ値の記載部の文字列
-	private String vals = Util.EMPTY.get();
+	private String vals = Common.EMPTY.get();
 	// コメントの内容
-	private String comment = Util.EMPTY.get();
+	private String comment = Common.EMPTY.get();
 
 	/**
 	 * コンストラクタ
@@ -49,28 +49,52 @@ public class InfoAccessService extends CommonFileAccessService {
 	}
 
 	/**
-	 * 付帯情報ファイルからパラメタ値を取得する。
-	 * @return パラメタ値のリスト
+	 * パラメタテーブルのヘッダ置換Mapを取得する。
+	 * keyはリソースのHTML内の置換識別子。valueは設定ファイルのテーブルヘッダ情報。
+	 * @return パラメタテーブルのヘッダ置換Map
+	 */
+	public HashMap<String, String> getHeaders() {
+		// ヘッダ置換Map
+		HashMap<String, String> headersMap = new HashMap<>();
+
+		int counter = 0;
+		for(String s : TABLE_HEADER.get()) {
+			try {
+				headersMap.put(s, ConfigAccessService.getParamTableHeaders().get(counter));
+			} catch(IndexOutOfBoundsException e) {
+				headersMap.put(s, Common.EMPTY.get());
+				ServiceLogger.warn("You do NOT set enough headers in a param table.");
+			}
+			counter++;
+		}
+		return headersMap;
+	}
+
+	/**
+	 * パラメタテーブルの値置換Mapを取得する。
+	 * keyはリソースのHTML内の置換識別子。valueは付帯情報ファイルの値情報。
+	 * @return パラメタテーブルの値置換Map
 	 */
 	public HashMap<String, Float> getValues() {
 		// パラメタ値を保持するマップ
 		HashMap<String, Float> valsMap = new HashMap<>();
-		if(!Util.EMPTY.get().equals(vals)) {
-			// パラメタ値をfloat変換してマップに格納
-			String[] valsArray = vals.split(VAL_SEPARATOR);
-			for(int i = 0; i < valsArray.length; i++) {
+
+		if(!Common.EMPTY.get().equals(vals)) {
+			int counter = 0;
+			for(String s : TABLE_VALUE.get()) {
 				try {
-					valsMap.put(KEY_LIST.get(i), Float.parseFloat(valsArray[i]));
-				} catch(RuntimeException e) {
-					ServiceLogger.error("Value at [" + (i+1) + "] has been converted to \"0\".");
-					ServiceLogger.trace(e);
-					valsMap.put(KEY_LIST.get(i), new Float(0));
+					// パラメタ値をfloat変換してマップに格納
+					valsMap.put(s, Float.parseFloat(vals.split(VAL_SEPARATOR)[counter]));
+				} catch(IndexOutOfBoundsException | NumberFormatException e) {
+					valsMap.put(s, new Float(0));
+					ServiceLogger.error("Value [" + (counter+1) + "] has been converted to \"0\".", e);
 				}
+				counter++;
 			}
 		} else {
 			// パラメタ値がない場合は空の値をセット
-			KEY_LIST.forEach(k -> {
-				valsMap.put(k, null);
+			TABLE_VALUE.get().forEach(v -> {
+				valsMap.put(v, null);
 			});
 			ServiceLogger.warn("You have no params in \"info.txt\".");
 		}
@@ -90,25 +114,25 @@ public class InfoAccessService extends CommonFileAccessService {
 	 * @return パラメタ値のKeyマップ
 	 */
 	public ArrayList<String> getKeyMap() {
-		return KEY_LIST;
+		return tableKeyList;
 	}
 
 	private void initValues(List<String> info) {
 		// パラメタ値が記述されている行の抽出
 		info.forEach(line -> {
 			if(line.startsWith(Header.PARAMS.get()))
-				vals = line.replaceAll(Header.PARAMS.get(), Util.EMPTY.get());
+				vals = line.replaceAll(Header.PARAMS.get(), Common.EMPTY.get());
 		});
 	}
 
 	private void initComment(List<String> info) {
 		// 初期化
-		comment = Util.EMPTY.get();
+		comment = Common.EMPTY.get();
 		// コメントが記述されている行の抽出
 		boolean isCommentArea = false;
 		for(String line : info) {
 			if(isCommentArea)
-				comment = comment + line + Util.NEW_LINE.get();
+				comment = comment + line + Common.NEW_LINE.get();
 			else
 				if(Header.COMMENT.get().equals(line))
 					isCommentArea = true;

@@ -9,9 +9,9 @@ import java.util.stream.Stream;
 
 import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet;
+import com.nmr.app.util.ConstSet.Common;
 import com.nmr.app.util.ConstSet.Extension;
 import com.nmr.app.util.ConstSet.Regex;
-import com.nmr.app.util.ConstSet.Util;
 
 /**
  * レポートページのHTMLを生成するクラス。
@@ -45,7 +45,7 @@ public class HTMLService extends CommonFileAccessService {
 	//　レポートページのインデックス
 	private ArrayList<IndexInfo> indexInfo = new ArrayList<>();
 	// レポートページのHTMLソース
-	private String contents = Util.EMPTY.get();
+	private String contents = Common.EMPTY.get();
 
 	/**
 	 * コンストラクタ
@@ -64,7 +64,7 @@ public class HTMLService extends CommonFileAccessService {
 		Consumer<Path> addIndex = p -> {
 			String pageTitle = p.toFile().getName();
 			String pagePath  = reportDirPath.toFile().getAbsolutePath() +
-					ConstSet.Path.SEPARATOR.get() + pageTitle + Extension.HTML.get();
+					ConstSet.FilePath.SEPARATOR.get() + pageTitle + Extension.HTML.get();
 			indexInfo.add(new IndexInfo(p, pageTitle, pagePath));
 		};
 		/* 名前が"report_"から始まるディレクトリはレポート出力用と
@@ -81,7 +81,7 @@ public class HTMLService extends CommonFileAccessService {
 	 */
 	public void createCSS() throws IOException {
 		// スタイルシートの出力先
-		String name = ConstSet.Path.SEPARATOR.get() + ResourceAccessService.CSS_TEMPLATE;
+		String name = ConstSet.FilePath.SEPARATOR.get() + ResourceAccessService.CSS_TEMPLATE;
 		String cssPath = reportDirPath.toFile().getAbsolutePath() + name;
 
 		try(FileWriter fw = new FileWriter(cssPath)) {
@@ -111,7 +111,7 @@ public class HTMLService extends CommonFileAccessService {
 
 	    	setTitle(idx.getTitle());	// タイトルを置換
 	    	setLink(i);						// リンクを置換
-	    	setValues(info);				// パラメタ値を置換
+	    	setTable(info);				// パラメタテーブルを置換
 	    	setImages(dataFiles);		// 画像を置換
 	    	setComment(info);		// コメントを置換
 
@@ -125,38 +125,45 @@ public class HTMLService extends CommonFileAccessService {
 		}
 	}
 
+	private void setTitle(String title) {
+		String target = Replace.TAG.get() + Replace.TITLE.get() + Replace.TAG.get();
+		contents = contents.replaceAll(target, title);
+	}
+
 	private void setLink(int index) {
 		// 置換対象文字列
 		String targetPrev = Replace.TAG.get() + Replace.PREV.get() + Replace.TAG.get();
 		String targetNext = Replace.TAG.get() + Replace.NEXT.get() + Replace.TAG.get();
 		// リンク先ファイルのパス
 		// TOPのページなら「PREV」は存在しない
-		String prev = index == 0 ? Util.EMPTY.get() : ConstSet.Path.CURRENT.get() +
+		String prev = index == 0 ? Common.EMPTY.get() : ConstSet.FilePath.CURRENT.get() +
 									indexInfo.get(index - 1).getTitle() + Extension.HTML.get();
 		// 最後のページなら「NEXT」は存在しない
-		String next = index == indexInfo.size() - 1 ? Util.EMPTY.get() : ConstSet.Path.CURRENT.get() +
+		String next = index == indexInfo.size() - 1 ? Common.EMPTY.get() : ConstSet.FilePath.CURRENT.get() +
 									indexInfo.get(index + 1).getTitle() + Extension.HTML.get();
 		// 置換実行
 		if(index != 0 && index != (indexInfo.size() - 1))
 			contents = contents.replaceAll(targetPrev, prev)
 							   .replaceAll(targetNext, next);
 		else if(index == 0)
-			contents = contents.replaceAll(targetPrev, Util.EMPTY.get())
+			contents = contents.replaceAll(targetPrev, Common.EMPTY.get())
 							   .replaceAll(targetNext, next);
 		else if(index == (indexInfo.size() - 1))
 			contents = contents.replaceAll(targetPrev, prev)
-							   .replaceAll(targetNext, Util.EMPTY.get());
+							   .replaceAll(targetNext, Common.EMPTY.get());
 	}
 
-	private void setTitle(String title) {
-		String target = Replace.TAG.get() + Replace.TITLE.get() + Replace.TAG.get();
-		contents = contents.replaceAll(target, title);
-	}
-
-	private void setValues(InfoAccessService info) {
+	private void setTable(InfoAccessService info) {
+		// パラメタテーブルのヘッダを置換
+		info.getHeaders().forEach((key, val) -> {
+			String target = Replace.TAG.get() + key + Replace.TAG.get();
+			String value  = val;
+			contents = contents.replaceAll(target, value);
+		});
+		// パラメタテーブルの値を置換
 		info.getValues().forEach((key, val) -> {
 			String target = Replace.TAG.get() + key + Replace.TAG.get();
-			String value  = val == null ? Util.EMPTY.get() : val.toString();
+			String value  = val == null ? Common.EMPTY.get() : val.toString();
 			contents = contents.replaceAll(target, value);
 		});
 	}
@@ -165,7 +172,7 @@ public class HTMLService extends CommonFileAccessService {
 		String target = Replace.TAG.get() + Replace.IMAGE.get() + Replace.TAG.get();
 		dataFiles.getImages().forEach(p -> {
 			contents = contents.replaceFirst(target,
-					p.toString().replaceAll(Regex.ESCAPE.get(), ConstSet.Path.SEPARATOR.get()));
+					p.toString().replaceAll(Regex.ESCAPE.get(), ConstSet.FilePath.SEPARATOR.get()));
 		});
 	}
 
@@ -174,6 +181,9 @@ public class HTMLService extends CommonFileAccessService {
 		contents = contents.replaceAll(target, info.getComment());
 	}
 
+	/**
+	 * レポートページのインデックス情報。
+	 */
 	class IndexInfo {
 
 		private Path   dir   = null;

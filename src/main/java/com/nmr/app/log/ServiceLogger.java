@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.nmr.app.util.ConstSet.Common;
 import com.nmr.app.util.ConstSet.Extension;
-import com.nmr.app.util.ConstSet.Path;
-import com.nmr.app.util.ConstSet.Util;
+import com.nmr.app.util.ConstSet.FilePath;
 
 /**
  * 共通のログサービスクラス。
@@ -44,7 +44,7 @@ public class ServiceLogger {
 	 * ログサービスの初期化
 	 */
 	public static void init() {
-		logFile = new File(Path.CURRENT.get() + LOG_FILE + Extension.LOG.get());
+		logFile = new File(FilePath.CURRENT.get() + LOG_FILE + Extension.LOG.get());
 		if (logFile != null && logFile.exists())	// 既にログファイルがあれば削除
 			logFile.delete();
 		logBuilder = new StringBuilder();		// ログバッファの生成
@@ -80,7 +80,7 @@ public class ServiceLogger {
 	}
 
 	/**
-	 * ERRORレベルのログ内容をバッファに書き込む。
+	 * ERRORレベルのログ内容とトレースをバッファに書き込む。
 	 * @param msg メッセージ
 	 */
 	public static void error(String msg) {
@@ -88,14 +88,23 @@ public class ServiceLogger {
 	}
 
 	/**
+	 * ERRORレベルのログ内容とトレースをバッファに書き込む。
+	 * @param msg メッセージ
+	 */
+	public static void error(String msg, Throwable t) {
+		create(Level.ERROR.get() + msg);
+		trace(t);
+	}
+
+	/**
 	 * スタックトレースの内容をバッファに書き込む。
 	 * @param e スタックトレース
 	 */
 	public static void trace(Throwable t) {
-		logBuilder.append(t.toString() + Util.NEW_LINE.get());
+		logBuilder.append(t.toString() + Common.NEW_LINE.get());
 		StackTraceElement[] elm = t.getStackTrace();
 		for(StackTraceElement  e : elm) {
-			logBuilder.append(Util.ATB.get() + e.toString() + Util.NEW_LINE.get());
+			logBuilder.append(Common.ATB.get() + e.toString() + Common.NEW_LINE.get());
 		}
 	}
 
@@ -103,15 +112,15 @@ public class ServiceLogger {
 		// 現在時刻
 		Date stamp = new Date(System.currentTimeMillis());
 		// ログの日付部を生成
-		String date = new SimpleDateFormat(Util.LOG_TIMESTAMP_DATE.get()).format(stamp);
+		String date = new SimpleDateFormat(Common.LOG_TIMESTAMP_DATE.get()).format(stamp);
 		// ログの時間部を生成
-		String time = new SimpleDateFormat(Util.LOG_TIMESTAMP_TIME.get()).format(stamp);
+		String time = new SimpleDateFormat(Common.LOG_TIMESTAMP_TIME.get()).format(stamp);
 
-		return date + Util.SPACE.get() + time + Util.SPACE.get();
+		return date + Common.SPACE.get() + time + Common.SPACE.get();
 	}
 
 	private static void create(String msg) {
 		logBuilder.append(timeStamp());
-		logBuilder.append(msg + Util.NEW_LINE.get());
+		logBuilder.append(msg + Common.NEW_LINE.get());
 	}
 }

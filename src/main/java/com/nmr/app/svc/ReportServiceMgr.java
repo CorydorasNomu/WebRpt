@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet;
-import com.nmr.app.util.ConstSet.Util;
+import com.nmr.app.util.ConstSet.Common;
 
 /**
  * レポートページ作成サービスの管理クラス。
@@ -51,16 +51,16 @@ public class ReportServiceMgr {
 	// レポート出力ディレクトリのパスを取得
 	private Path getReportDirPath() {
 		// ディレクトリ名のタイムスタンプ部を生成
-		SimpleDateFormat sdf = new SimpleDateFormat(Util.DIR_TIMESTAMP.get());
+		SimpleDateFormat sdf = new SimpleDateFormat(Common.DIR_TIMESTAMP.get());
 		String date = sdf.format(new Date(System.currentTimeMillis()));
 
 		// ディレクトリ名を生成
-		String reportDirName = Util.EMPTY.get();
+		String reportDirName = Common.EMPTY.get();
 		String str = ConfigAccessService.getWorkingDirPath().toString();
-		if(str.endsWith(ConstSet.Path.SEPARATOR.get())) {
+		if(str.endsWith(ConstSet.FilePath.SEPARATOR.get())) {
 			reportDirName = REPORT_DIR_PREFIX + date;
 		} else {
-			reportDirName = ConstSet.Path.SEPARATOR.get() + REPORT_DIR_PREFIX + date;
+			reportDirName = ConstSet.FilePath.SEPARATOR.get() + REPORT_DIR_PREFIX + date;
 		}
 
 		return Paths.get(str + reportDirName);
