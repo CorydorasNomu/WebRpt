@@ -1,5 +1,6 @@
 package com.nmr.app.svc;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,15 +24,17 @@ public class InfoAccessService extends CommonFileAccessService {
 		private Header(String s) {
 			str = s;
 		}
-
 		public String get() {
 			return str;
 		}
 	}
-	// パラメタ値のキーのMap
-	private static ArrayList<String> tableKeyList = null;
+
 	// パラメタ値のセパレタ
 	private static final String VAL_SEPARATOR = Common.SPACE.get();
+	// パラメタ値のキーのMap
+	private static ArrayList<String> tableKeyList = null;
+	// データディレクトリ
+	private String dirName = Common.EMPTY.get();
 	// パラメタ値の記載部の文字列
 	private String vals = Common.EMPTY.get();
 	// コメントの内容
@@ -42,10 +45,13 @@ public class InfoAccessService extends CommonFileAccessService {
 	 * @param info 付帯情報ファイルのパス
 	 */
 	public InfoAccessService(Path info) throws IOException {
-		if(info != null) {
-			initValues(getLines(info.toString()));
-			initComment(getLines(info.toString()));
+		if(info == null || !info.toFile().exists()) {
+			ServiceLogger.error("\"info.txt\" does NOT exist in a data directory.");
+			throw new FileNotFoundException();
 		}
+		dirName = info.toFile().getPath();
+		initValues(getLines(info.toString()));
+		initComment(getLines(info.toString()));
 	}
 
 	/**
@@ -63,7 +69,7 @@ public class InfoAccessService extends CommonFileAccessService {
 				headersMap.put(s, ConfigAccessService.getParamTableHeaders().get(counter));
 			} catch(IndexOutOfBoundsException e) {
 				headersMap.put(s, Common.EMPTY.get());
-				ServiceLogger.warn("You do NOT set enough headers in a param table.");
+				ServiceLogger.warn(dirName + " : You do NOT set a header at [" + (counter+1) + "].");
 			}
 			counter++;
 		}
@@ -75,19 +81,19 @@ public class InfoAccessService extends CommonFileAccessService {
 	 * keyはリソースのHTML内の置換識別子。valueは付帯情報ファイルの値情報。
 	 * @return パラメタテーブルの値置換Map
 	 */
-	public HashMap<String, Float> getValues() {
+	public HashMap<String, String> getValues() {
 		// パラメタ値を保持するマップ
-		HashMap<String, Float> valsMap = new HashMap<>();
+		HashMap<String, String> valsMap = new HashMap<>();
 
 		if(!Common.EMPTY.get().equals(vals)) {
 			int counter = 0;
 			for(String s : TABLE_VALUE.get()) {
 				try {
 					// パラメタ値をfloat変換してマップに格納
-					valsMap.put(s, Float.parseFloat(vals.split(VAL_SEPARATOR)[counter]));
-				} catch(IndexOutOfBoundsException | NumberFormatException e) {
-					valsMap.put(s, new Float(0));
-					ServiceLogger.error("Value [" + (counter+1) + "] has been converted to \"0\".", e);
+					valsMap.put(s, vals.split(VAL_SEPARATOR)[counter]);
+				} catch(IndexOutOfBoundsException e) {
+					valsMap.put(s, Common.EMPTY.get());
+					ServiceLogger.warn(dirName + " : You do NOT set a value at [" + (counter+1) + "].");
 				}
 				counter++;
 			}
@@ -96,7 +102,7 @@ public class InfoAccessService extends CommonFileAccessService {
 			TABLE_VALUE.get().forEach(v -> {
 				valsMap.put(v, null);
 			});
-			ServiceLogger.warn("You have no params in \"info.txt\".");
+			ServiceLogger.warn(dirName + " : You have no params in \"info.txt\".");
 		}
 		return valsMap;
 	}

@@ -34,7 +34,6 @@ public class HTMLService extends CommonFileAccessService {
 		private Replace(String s) {
 			str = s;
 		}
-
 		public String get() {
 			return str;
 		}
@@ -163,7 +162,7 @@ public class HTMLService extends CommonFileAccessService {
 		// パラメタテーブルの値を置換
 		info.getValues().forEach((key, val) -> {
 			String target = Replace.TAG.get() + key + Replace.TAG.get();
-			String value  = val == null ? Common.EMPTY.get() : val.toString();
+			String value  = val == null ? Common.EMPTY.get() : val;
 			contents = contents.replaceAll(target, value);
 		});
 	}
