@@ -1,6 +1,10 @@
 /.gradle/
 /bin/
 /.project
+/.gitignore
 /.classpath
-build/
+/build/classes
+/build/generated
+/build/resources
+/build/tmp
 /.settings/

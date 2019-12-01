@@ -5,28 +5,26 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.nmr.app.log.ServiceLogger;
 
 /**
- * ƒtƒ@ƒCƒ‹ƒAƒNƒZƒX‚Ì‹¤’Êˆ—‚ª’è‹`‚³‚ê‚éƒNƒ‰ƒXB
+ * ãƒ•ã‚¡ã‚¤ãƒ«ã‚¢ã‚¯ã‚»ã‚¹ã®å…±é€šå‡¦ç†ãŒå®šç¾©ã•ã‚Œã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
 public class CommonFileAccessService {
 
 	/**
-	 * ƒtƒ@ƒCƒ‹‚ğ‰ğÍ‚µ‚Ä‹Lq“à—e‚ğs‚²‚Æ‚ÉƒŠƒXƒg‚É‚µ‚Äæ“¾‚·‚éB
-	 * @param path ‰ğÍ‘ÎÛƒtƒ@ƒCƒ‹‚ÌƒpƒX
-	 * @return ‰ğÍ‚³‚ê‚½ƒtƒ@ƒCƒ‹“à—e
-	 * @throws IOException ‰ğÍ‚É¸”s
+	 * ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è§£æã—ã¦è¨˜è¿°å†…å®¹ã‚’è¡Œã”ã¨ã«ãƒªã‚¹ãƒˆã«ã—ã¦å–å¾—ã™ã‚‹ã€‚
+	 * @param path è§£æå¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
+	 * @return è§£æã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«å†…å®¹
+	 * @throws IOException è§£æã«å¤±æ•—
 	 */
 	public static List<String> getLines(String path) throws IOException {
 		List<String> contents = null;
 		try {
-			contents = Files.lines(Paths.get(path),
-					StandardCharsets.UTF_8).collect(Collectors.toList());
+			contents = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
 		} catch(IOException e) {
 			ServiceLogger.error("Fail to get contents of the file.");
 			throw e;

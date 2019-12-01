@@ -3,7 +3,7 @@ package com.nmr.app.util;
 import java.util.ArrayList;
 
 /**
- * ”Ä—p“I‚Ég—p‚³‚ê‚é’è”‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * æ±ç”¨çš„ã«ä½¿ç”¨ã•ã‚Œã‚‹å®šæ•°ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
@@ -94,8 +94,8 @@ public class ConstSet {
 		}
 
 		/**
-		 * ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ì’l’uŠ·‚Ì‚½‚ß‚ÌƒL[ƒŠƒXƒg‚ğæ“¾‚·‚éB
-		 * @return ƒwƒbƒ_’uŠ·‚Ì‚½‚ß‚ÌƒL[ƒŠƒXƒg
+		 * ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®å€¤ç½®æ›ã®ãŸã‚ã®ã‚­ãƒ¼ãƒªã‚¹ãƒˆã‚’å–å¾—ã™ã‚‹ã€‚
+		 * @return ãƒ˜ãƒƒãƒ€ç½®æ›ã®ãŸã‚ã®ã‚­ãƒ¼ãƒªã‚¹ãƒˆ
 		 */
 		public static ArrayList<String> get() {
 			ArrayList<String> keyList = new ArrayList<>();
@@ -127,8 +127,8 @@ public class ConstSet {
 		}
 
 		/**
-		 * ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_’uŠ·‚Ì‚½‚ß‚ÌƒL[ƒŠƒXƒg‚ğæ“¾‚·‚éB
-		 * @return ƒwƒbƒ_’uŠ·‚Ì‚½‚ß‚ÌƒL[ƒŠƒXƒg
+		 * ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ç½®æ›ã®ãŸã‚ã®ã‚­ãƒ¼ãƒªã‚¹ãƒˆã‚’å–å¾—ã™ã‚‹ã€‚
+		 * @return ãƒ˜ãƒƒãƒ€ç½®æ›ã®ãŸã‚ã®ã‚­ãƒ¼ãƒªã‚¹ãƒˆ
 		 */
 		public static ArrayList<String> get() {
 			ArrayList<String> keyList = new ArrayList<>();

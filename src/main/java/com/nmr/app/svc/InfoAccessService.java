@@ -3,7 +3,6 @@ package com.nmr.app.svc;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,12 +11,17 @@ import com.nmr.app.util.ConstSet.Common;
 import com.nmr.app.util.ConstSet.TABLE_HEADER;
 import com.nmr.app.util.ConstSet.TABLE_VALUE;
 
+/**
+ * ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«"info.txt"ã¸ã®ã‚¢ã‚¯ã‚»ã‚µã‚¯ãƒ©ã‚¹ã€‚
+ *
+ * @author nomu.shunn
+ */
 public class InfoAccessService extends CommonFileAccessService {
 
-	// •t‘Ñî•ñƒtƒ@ƒCƒ‹“à‚Ìƒwƒbƒ_
+	// ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«å†…ã®ãƒ˜ãƒƒãƒ€
 	private enum Header {
-		PARAMS("PARAMS:"),		// ƒpƒ‰ƒƒ^’l
-		COMMENT("#Comment");	// ƒRƒƒ“ƒg
+		PARAMS("PARAMS:"),		// ãƒ‘ãƒ©ãƒ¡ã‚¿å€¤
+		COMMENT("#Comment");	// ã‚³ãƒ¡ãƒ³ãƒˆ
 
 		private final String str;
 
@@ -29,20 +33,18 @@ public class InfoAccessService extends CommonFileAccessService {
 		}
 	}
 
-	// ƒpƒ‰ƒƒ^’l‚ÌƒZƒpƒŒƒ^
+	// ãƒ‘ãƒ©ãƒ¡ã‚¿å€¤ã®ã‚»ãƒ‘ãƒ¬ã‚¿
 	private static final String VAL_SEPARATOR = Common.SPACE.get();
-	// ƒpƒ‰ƒƒ^’l‚ÌƒL[‚ÌMap
-	private static ArrayList<String> tableKeyList = null;
-	// ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ
+	// ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
 	private String dirName = Common.EMPTY.get();
-	// ƒpƒ‰ƒƒ^’l‚Ì‹LÚ•”‚Ì•¶š—ñ
+	// ãƒ‘ãƒ©ãƒ¡ã‚¿å€¤ã®è¨˜è¼‰éƒ¨ã®æ–‡å­—åˆ—
 	private String vals = Common.EMPTY.get();
-	// ƒRƒƒ“ƒg‚Ì“à—e
+	// ã‚³ãƒ¡ãƒ³ãƒˆã®å†…å®¹
 	private String comment = Common.EMPTY.get();
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param info •t‘Ñî•ñƒtƒ@ƒCƒ‹‚ÌƒpƒX
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param info ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 	 */
 	public InfoAccessService(Path info) throws IOException {
 		if(info == null || !info.toFile().exists()) {
@@ -55,12 +57,12 @@ public class InfoAccessService extends CommonFileAccessService {
 	}
 
 	/**
-	 * ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_’uŠ·Map‚ğæ“¾‚·‚éB
-	 * key‚ÍƒŠƒ\[ƒX‚ÌHTML“à‚Ì’uŠ·¯•ÊqBvalue‚Íİ’èƒtƒ@ƒCƒ‹‚Ìƒe[ƒuƒ‹ƒwƒbƒ_î•ñB
-	 * @return ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_’uŠ·Map
+	 * ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ç½®æ›Mapã‚’å–å¾—ã™ã‚‹ã€‚
+	 * keyã¯ãƒªã‚½ãƒ¼ã‚¹ã®HTMLå†…ã®ç½®æ›è­˜åˆ¥å­ã€‚valueã¯è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ†ãƒ¼ãƒ–ãƒ«ãƒ˜ãƒƒãƒ€æƒ…å ±ã€‚
+	 * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ç½®æ›Map
 	 */
 	public HashMap<String, String> getHeaders() {
-		// ƒwƒbƒ_’uŠ·Map
+		// ãƒ˜ãƒƒãƒ€ç½®æ›Map
 		HashMap<String, String> headersMap = new HashMap<>();
 
 		int counter = 0;
@@ -77,19 +79,19 @@ public class InfoAccessService extends CommonFileAccessService {
 	}
 
 	/**
-	 * ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ì’l’uŠ·Map‚ğæ“¾‚·‚éB
-	 * key‚ÍƒŠƒ\[ƒX‚ÌHTML“à‚Ì’uŠ·¯•ÊqBvalue‚Í•t‘Ñî•ñƒtƒ@ƒCƒ‹‚Ì’lî•ñB
-	 * @return ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ì’l’uŠ·Map
+	 * ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®å€¤ç½®æ›Mapã‚’å–å¾—ã™ã‚‹ã€‚
+	 * keyã¯ãƒªã‚½ãƒ¼ã‚¹ã®HTMLå†…ã®ç½®æ›è­˜åˆ¥å­ã€‚valueã¯ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã®å€¤æƒ…å ±ã€‚
+	 * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®å€¤ç½®æ›Map
 	 */
 	public HashMap<String, String> getValues() {
-		// ƒpƒ‰ƒƒ^’l‚ğ•Û‚·‚éƒ}ƒbƒv
+		// ãƒ‘ãƒ©ãƒ¡ã‚¿å€¤ã‚’ä¿æŒã™ã‚‹ãƒãƒƒãƒ—
 		HashMap<String, String> valsMap = new HashMap<>();
 
 		if(!Common.EMPTY.get().equals(vals)) {
 			int counter = 0;
 			for(String s : TABLE_VALUE.get()) {
 				try {
-					// ƒpƒ‰ƒƒ^’l‚ğfloat•ÏŠ·‚µ‚Äƒ}ƒbƒv‚ÉŠi”[
+					// ãƒ‘ãƒ©ãƒ¡ã‚¿å€¤ã‚’floatå¤‰æ›ã—ã¦ãƒãƒƒãƒ—ã«æ ¼ç´
 					valsMap.put(s, vals.split(VAL_SEPARATOR)[counter]);
 				} catch(IndexOutOfBoundsException e) {
 					valsMap.put(s, Common.EMPTY.get());
@@ -98,7 +100,7 @@ public class InfoAccessService extends CommonFileAccessService {
 				counter++;
 			}
 		} else {
-			// ƒpƒ‰ƒƒ^’l‚ª‚È‚¢ê‡‚Í‹ó‚Ì’l‚ğƒZƒbƒg
+			// ãƒ‘ãƒ©ãƒ¡ã‚¿å€¤ãŒãªã„å ´åˆã¯ç©ºã®å€¤ã‚’ã‚»ãƒƒãƒˆ
 			TABLE_VALUE.get().forEach(v -> {
 				valsMap.put(v, null);
 			});
@@ -108,23 +110,15 @@ public class InfoAccessService extends CommonFileAccessService {
 	}
 
 	/**
-	 * ƒRƒƒ“ƒg‚ğæ“¾‚·‚éB
-	 * @return ƒRƒƒ“ƒg‚Ì•¶š—ñ
+	 * ã‚³ãƒ¡ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹ã€‚
+	 * @return ã‚³ãƒ¡ãƒ³ãƒˆã®æ–‡å­—åˆ—
 	 */
 	public String getComment() {
 		return comment;
 	}
 
-	/**
-	 * ƒpƒ‰ƒƒ^’l‚ÌKeyƒ}ƒbƒv‚ğæ“¾‚·‚éB
-	 * @return ƒpƒ‰ƒƒ^’l‚ÌKeyƒ}ƒbƒv
-	 */
-	public ArrayList<String> getKeyMap() {
-		return tableKeyList;
-	}
-
 	private void initValues(List<String> info) {
-		// ƒpƒ‰ƒƒ^’l‚ª‹Lq‚³‚ê‚Ä‚¢‚és‚Ì’Šo
+		// ãƒ‘ãƒ©ãƒ¡ã‚¿å€¤ãŒè¨˜è¿°ã•ã‚Œã¦ã„ã‚‹è¡Œã®æŠ½å‡º
 		info.forEach(line -> {
 			if(line.startsWith(Header.PARAMS.get()))
 				vals = line.replaceAll(Header.PARAMS.get(), Common.EMPTY.get());
@@ -132,9 +126,9 @@ public class InfoAccessService extends CommonFileAccessService {
 	}
 
 	private void initComment(List<String> info) {
-		// ‰Šú‰»
+		// åˆæœŸåŒ–
 		comment = Common.EMPTY.get();
-		// ƒRƒƒ“ƒg‚ª‹Lq‚³‚ê‚Ä‚¢‚és‚Ì’Šo
+		// ã‚³ãƒ¡ãƒ³ãƒˆãŒè¨˜è¿°ã•ã‚Œã¦ã„ã‚‹è¡Œã®æŠ½å‡º
 		boolean isCommentArea = false;
 		for(String line : info) {
 			if(isCommentArea)

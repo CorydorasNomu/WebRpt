@@ -11,40 +11,40 @@ import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet.Extension;
 
 /**
- * ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ“à‚É‚ ‚éŠeƒtƒ@ƒCƒ‹‚Ö‚ÌƒAƒNƒZƒTƒNƒ‰ƒXB
+ * ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã«ã‚ã‚‹å„ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚µã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
 public class DataFileAccessService {
 
-	// •t‘Ñî•ñƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹–¼
+	// ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«å
 	private static final String INFO_TXT = "info" + Extension.TXT.get();
-	// ‰æ‘œƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ÌƒŠƒXƒg
+	// ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã®ãƒªã‚¹ãƒˆ
 	private static ArrayList<Path> imgs;
-	// •t‘Ñî•ñƒtƒ@ƒCƒ‹‚ÌƒpƒX
+	// ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 	private static Path info;
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param dirPath ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param dirPath ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹
 	 */
 	public DataFileAccessService(Path dirPath) throws IOException {
 		init(dirPath);
 	}
 
 	private void init(Path path) throws IOException {
-		// •Ï”‚Ì‰Šú‰»
+		// å¤‰æ•°ã®åˆæœŸåŒ–
 		imgs = new ArrayList<>();
 		info = null;
-		// ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ“à‚Ìƒtƒ@ƒCƒ‹‚ÌƒpƒXî•ñ‚ğæ“¾
+		// ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹æƒ…å ±ã‚’å–å¾—
 		try(Stream<Path> files = Files.list(path)) {
 
 			Consumer<Path> set = p -> {
 				String fileName = p.toFile().getName();
 				if(fileName.endsWith(Extension.JPG.get()) || fileName.endsWith(Extension.PNG.get()))
-					imgs.add(p.toAbsolutePath());	// ‰æ‘œ‚ÌƒpƒX‚ğæ“¾
+					imgs.add(p.toAbsolutePath());	// ç”»åƒã®ãƒ‘ã‚¹ã‚’å–å¾—
 				if(INFO_TXT.equals(fileName))
-					info = p.toAbsolutePath();			// •t‘Ñî•ñ‚ÌƒpƒX‚ğæ“¾
+					info = p.toAbsolutePath();		// ä»˜å¸¯æƒ…å ±ã®ãƒ‘ã‚¹ã‚’å–å¾—
 			};
 
 			files.filter(p -> p.toFile().isFile())
@@ -56,16 +56,16 @@ public class DataFileAccessService {
 	}
 
 	/**
-	 * ‘—M”gŒ`‰æ‘œ‚ÌƒpƒX‚ğæ“¾‚·‚éB
-	 * @return ‘—M”gŒ`‰æ‘œ‚ÌƒpƒX
+	 * é€ä¿¡æ³¢å½¢ç”»åƒã®ãƒ‘ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚
+	 * @return é€ä¿¡æ³¢å½¢ç”»åƒã®ãƒ‘ã‚¹
 	 */
 	public ArrayList<Path> getImages() {
 		return imgs;
 	}
 
 	/**
-	 * •t‘Ñî•ñƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğæ“¾‚·‚éB
-	 * @return •t‘Ñî•ñƒtƒ@ƒCƒ‹
+	 * ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚
+	 * @return ä»˜å¸¯æƒ…å ±ãƒ•ã‚¡ã‚¤ãƒ«
 	 */
 	public Path getInfo() {
 		return info;

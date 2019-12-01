@@ -13,48 +13,48 @@ import com.nmr.app.util.ConstSet;
 import com.nmr.app.util.ConstSet.Common;
 
 /**
- * ƒŒƒ|[ƒgƒy[ƒWì¬ƒT[ƒrƒX‚ÌŠÇ—ƒNƒ‰ƒXB
+ * ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ä½œæˆã‚µãƒ¼ãƒ“ã‚¹ã®ç®¡ç†ã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
 public class ReportServiceMgr {
 
-	// ƒŒƒ|[ƒgo—Í—pƒfƒBƒŒƒNƒgƒŠ‚ğ¯•Ê‚·‚é‚½‚ß‚ÌÚ“ª•¶š
+	// ãƒ¬ãƒãƒ¼ãƒˆå‡ºåŠ›ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’è­˜åˆ¥ã™ã‚‹ãŸã‚ã®æ¥é ­æ–‡å­—
 	static final String REPORT_DIR_PREFIX = "report_";
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	public ReportServiceMgr() throws IOException {
 		ConfigAccessService.init();
 	}
 
 	/**
-	 * ƒŒƒ|[ƒg‚ğì¬‚·‚éB
-	 * @param dirStream ƒŒƒ|[ƒgo—Í‘ÎÛ‚Ìì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒXƒXƒgƒŠ[ƒ€
-	 * @throws IOException ƒŒƒ|[ƒg‚Ìì¬‚É¸”s
+	 * ãƒ¬ãƒãƒ¼ãƒˆã‚’ä½œæˆã™ã‚‹ã€‚
+	 * @param dirStream ãƒ¬ãƒãƒ¼ãƒˆå‡ºåŠ›å¯¾è±¡ã®ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹ã‚¹ãƒˆãƒªãƒ¼ãƒ 
+	 * @throws IOException ãƒ¬ãƒãƒ¼ãƒˆã®ä½œæˆã«å¤±æ•—
 	 */
 	public void create(Stream<Path> dirStream) throws IOException {
-		// ƒŒƒ|[ƒgo—ÍƒfƒBƒŒƒNƒgƒŠ‚Ìì¬
+		// ãƒ¬ãƒãƒ¼ãƒˆå‡ºåŠ›ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ä½œæˆ
 		createDirectory();
-		// HTMLƒT[ƒrƒX‚Ì¶¬
+		// HTMLã‚µãƒ¼ãƒ“ã‚¹ã®ç”Ÿæˆ
 		HTMLService htmlService = new HTMLService(getReportDirPath());
 
-		// ƒŒƒ|[ƒg‚ÌƒCƒ“ƒfƒbƒNƒXì¬
+		// ãƒ¬ãƒãƒ¼ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä½œæˆ
 		htmlService.createIndex(dirStream);
-		// ƒXƒ^ƒCƒ‹ƒV[ƒgì¬
+		// ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆä½œæˆ
 		htmlService.createCSS();
-		// ƒŒƒ|[ƒgƒy[ƒWì¬
+		// ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ä½œæˆ
 		htmlService.createHTML();
 	}
 
-	// ƒŒƒ|[ƒgo—ÍƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚ğæ“¾
+	// ãƒ¬ãƒãƒ¼ãƒˆå‡ºåŠ›ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹ã‚’å–å¾—
 	private Path getReportDirPath() {
-		// ƒfƒBƒŒƒNƒgƒŠ–¼‚Ìƒ^ƒCƒ€ƒXƒ^ƒ“ƒv•”‚ğ¶¬
+		// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã®ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—éƒ¨ã‚’ç”Ÿæˆ
 		SimpleDateFormat sdf = new SimpleDateFormat(Common.DIR_TIMESTAMP.get());
 		String date = sdf.format(new Date(System.currentTimeMillis()));
 
-		// ƒfƒBƒŒƒNƒgƒŠ–¼‚ğ¶¬
+		// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã‚’ç”Ÿæˆ
 		String reportDirName = Common.EMPTY.get();
 		String str = ConfigAccessService.getWorkingDirPath().toString();
 		if(str.endsWith(ConstSet.FilePath.SEPARATOR.get())) {

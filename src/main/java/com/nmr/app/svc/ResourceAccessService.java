@@ -10,45 +10,45 @@ import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet.Common;
 
 /**
- * jar“à‚É•ø‚¦‚ñ‚Å‚¢‚éƒŠƒ\[ƒXƒtƒ@ƒCƒ‹‚Ö‚ÌƒAƒNƒZƒTƒNƒ‰ƒXB
+ * jarå†…ã«æŠ±ãˆè¾¼ã‚“ã§ã„ã‚‹ãƒªã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚µã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
-public class ResourceAccessService extends CommonFileAccessService {
+public class ResourceAccessService {
 
-	// HTMLƒeƒ“ƒvƒŒ[ƒg‚Ìƒtƒ@ƒCƒ‹–¼
+	// HTMLãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«å
 	public static final String HTML_TEMPLATE      =	"template.html";
-	// CSSƒeƒ“ƒvƒŒ[ƒg‚Ìƒtƒ@ƒCƒ‹–¼
+	// CSSãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«å
 	public static final String CSS_TEMPLATE       =	"template.css";
-	// HTMLƒeƒ“ƒvƒŒ[ƒg‚ÌƒŠƒ\[ƒX“àƒpƒX
+	// HTMLãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒªã‚½ãƒ¼ã‚¹å†…ãƒ‘ã‚¹
 	private static final String HTML_TEMPLATE_URL = "/html/" + HTML_TEMPLATE;
-	// CSSƒeƒ“ƒvƒŒ[ƒg‚ÌƒŠƒ\[ƒX“àƒpƒX
+	// CSSãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒªã‚½ãƒ¼ã‚¹å†…ãƒ‘ã‚¹
 	private static final String CSS_TEMPLATE_URL  =	"/css/"  + CSS_TEMPLATE;
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	 */
 	public ResourceAccessService() {
 		// noop
 	}
 
 	/**
-	 * Jar“à‚ÌHTMLƒeƒ“ƒvƒŒ[ƒg‚Ì“à—e‚ğæ“¾‚·‚éB
-	 * @return Jar“à‚ÌHTMLƒeƒ“ƒvƒŒ[ƒg‚Ì“à—e
-	 * @throws IOException HTMLƒeƒ“ƒvƒŒ[ƒg‚Ì“à—eæ“¾‚É¸”s
+	 * Jarå†…ã®HTMLãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å†…å®¹ã‚’å–å¾—ã™ã‚‹ã€‚
+	 * @return Jarå†…ã®HTMLãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å†…å®¹
+	 * @throws IOException HTMLãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å†…å®¹å–å¾—ã«å¤±æ•—
 	 */
 	public static String getHTMLContents() throws IOException {
-		// ƒXƒgƒŠ[ƒ€‚©‚ç•¶š—ñ‚Ö‚Ì•ÏŠ·
+		// ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰æ–‡å­—åˆ—ã¸ã®å¤‰æ›
 		return convert(ResourceAccessService.class.getResourceAsStream(HTML_TEMPLATE_URL));
 	}
 
 	/**
-	 * Jar“à‚ÌCSSƒeƒ“ƒvƒŒ[ƒg‚Ì“à—e‚ğæ“¾‚·‚éB
-	 * @return Jar“à‚ÌCSSƒeƒ“ƒvƒŒ[ƒg‚Ì“à—e
-	 * @throws IOException CSSƒeƒ“ƒvƒŒ[ƒg‚Ì“à—eæ“¾‚É¸”s
+	 * Jarå†…ã®CSSãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å†…å®¹ã‚’å–å¾—ã™ã‚‹ã€‚
+	 * @return Jarå†…ã®CSSãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å†…å®¹
+	 * @throws IOException CSSãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å†…å®¹å–å¾—ã«å¤±æ•—
 	 */
 	public static String getCSSContents() throws IOException {
-		// ƒXƒgƒŠ[ƒ€‚©‚ç•¶š—ñ‚Ö‚Ì•ÏŠ·
+		// ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰æ–‡å­—åˆ—ã¸ã®å¤‰æ›
 		return convert(ResourceAccessService.class.getResourceAsStream(CSS_TEMPLATE_URL));
 	}
 

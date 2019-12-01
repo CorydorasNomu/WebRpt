@@ -14,20 +14,20 @@ import com.nmr.app.util.ConstSet.Extension;
 import com.nmr.app.util.ConstSet.Regex;
 
 /**
- * ƒŒƒ|[ƒgƒy[ƒW‚ÌHTML‚ğ¶¬‚·‚éƒNƒ‰ƒXB
+ * ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®HTMLã‚’ç”Ÿæˆã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
-public class HTMLService extends CommonFileAccessService {
+public class HTMLService {
 
-	// ’uŠ·‚Åg—p‚·‚é’è”‚ÌéŒ¾
+	// ç½®æ›ã§ä½¿ç”¨ã™ã‚‹å®šæ•°ã®å®£è¨€
 	private enum Replace {
-		TAG("%"),			// ’uŠ·ŠJn‚Ì¯•Êq
-		TITLE("title"),		// ƒ^ƒCƒgƒ‹‚Ì’uŠ·•¶š—ñ
-		IMAGE("img"),		// ‰æ‘œ‚Ì’uŠ·•¶š—ñ
-		COMMENT("comment"),	// ƒRƒƒ“ƒg‚Ì’uŠ·•¶š—ñ
-		PREV("prev"),		// PREVƒŠƒ“ƒN‚Ì’uŠ·•¶š—ñ
-		NEXT("next");		// NEXTƒŠƒ“ƒN‚Ì’uŠ·•¶š—ñ
+		TAG("%"),			// ç½®æ›é–‹å§‹ã®è­˜åˆ¥å­
+		TITLE("title"),		// ã‚¿ã‚¤ãƒˆãƒ«ã®ç½®æ›æ–‡å­—åˆ—
+		IMAGE("img"),		// ç”»åƒã®ç½®æ›æ–‡å­—åˆ—
+		COMMENT("comment"),	// ã‚³ãƒ¡ãƒ³ãƒˆã®ç½®æ›æ–‡å­—åˆ—
+		PREV("prev"),		// PREVãƒªãƒ³ã‚¯ã®ç½®æ›æ–‡å­—åˆ—
+		NEXT("next");		// NEXTãƒªãƒ³ã‚¯ã®ç½®æ›æ–‡å­—åˆ—
 
 		private final String str;
 
@@ -39,35 +39,35 @@ public class HTMLService extends CommonFileAccessService {
 		}
 	}
 
-	// ƒŒƒ|[ƒgo—Í—pƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX
+	// ãƒ¬ãƒãƒ¼ãƒˆå‡ºåŠ›ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹
 	private Path reportDirPath = null;
-	//@ƒŒƒ|[ƒgƒy[ƒW‚ÌƒCƒ“ƒfƒbƒNƒX
+	// ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	private ArrayList<IndexInfo> indexInfo = new ArrayList<>();
-	// ƒŒƒ|[ƒgƒy[ƒW‚ÌHTMLƒ\[ƒX
-	private String contents = Common.EMPTY.get();
+	// ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®HTMLã‚½ãƒ¼ã‚¹
+	private String htmlContents = Common.EMPTY.get();
 
 	/**
-	 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	 * @param path ƒŒƒ|[ƒgo—Í—pƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX
+	 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	 * @param path ãƒ¬ãƒãƒ¼ãƒˆå‡ºåŠ›ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹
 	 */
 	public HTMLService(Path path) {
 		reportDirPath = path;
 	}
 
 	/**
-	 * ƒŒƒ|[ƒgƒy[ƒW‚ÌƒCƒ“ƒfƒbƒNƒX‚ğì¬‚·‚éB
-	 * @param str ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒXƒXƒgƒŠ[ƒ€
+	 * ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ä½œæˆã™ã‚‹ã€‚
+	 * @param str ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹ã‚¹ãƒˆãƒªãƒ¼ãƒ 
 	 */
 	public void createIndex(Stream<Path> str) {
-		// ƒCƒ“ƒfƒbƒNƒX‚ğ’Ç‰Á
+		// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¿½åŠ 
 		Consumer<Path> addIndex = p -> {
 			String pageTitle = p.toFile().getName();
 			String pagePath  = reportDirPath.toFile().getAbsolutePath() +
 					ConstSet.FilePath.SEPARATOR.get() + pageTitle + Extension.HTML.get();
 			indexInfo.add(new IndexInfo(p, pageTitle, pagePath));
 		};
-		/* –¼‘O‚ª"report_"‚©‚çn‚Ü‚éƒfƒBƒŒƒNƒgƒŠ‚ÍƒŒƒ|[ƒgo—Í—p‚Æ
-		 * Œ©‚È‚µ‚ÄAƒŒƒ|[ƒgì¬‘ÎÛ‚Ìƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠŒQ‚©‚çœŠOB
+		/* åå‰ãŒ"report_"ã‹ã‚‰å§‹ã¾ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¯ãƒ¬ãƒãƒ¼ãƒˆå‡ºåŠ›ç”¨ã¨
+		 * è¦‹ãªã—ã¦ã€ãƒ¬ãƒãƒ¼ãƒˆä½œæˆå¯¾è±¡ã®ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªç¾¤ã‹ã‚‰é™¤å¤–ã€‚
 		 * */
 		str.filter(p -> p.toFile().isDirectory() &&
 						!p.toFile().getName().startsWith(ReportServiceMgr.REPORT_DIR_PREFIX))
@@ -75,16 +75,16 @@ public class HTMLService extends CommonFileAccessService {
 	}
 
 	/**
-	 * ƒXƒ^ƒCƒ‹ƒV[ƒg‚ğì¬‚·‚éB
-	 * @throws IOException ƒXƒ^ƒCƒ‹ƒV[ƒg‚Ìì¬‚É¸”s
+	 * ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆã‚’ä½œæˆã™ã‚‹ã€‚
+	 * @throws IOException ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆã®ä½œæˆã«å¤±æ•—
 	 */
 	public void createCSS() throws IOException {
-		// ƒXƒ^ƒCƒ‹ƒV[ƒg‚Ìo—Íæ
+		// ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆã®å‡ºåŠ›å…ˆ
 		String name = ConstSet.FilePath.SEPARATOR.get() + ResourceAccessService.CSS_TEMPLATE;
 		String cssPath = reportDirPath.toFile().getAbsolutePath() + name;
 
 		try(FileWriter fw = new FileWriter(cssPath)) {
-			// ƒXƒ^ƒCƒ‹ƒV[ƒg‚Ì“à—e‚É‚Í•ÏX‚ª‚È‚¢‚Ì‚ÅAƒŠƒ\[ƒX‚Ì’†g‚ğ‚»‚Ì‚Ü‚Üo—Í
+			// ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆã®å†…å®¹ã«ã¯å¤‰æ›´ãŒãªã„ã®ã§ã€ãƒªã‚½ãƒ¼ã‚¹ã®ä¸­èº«ã‚’ãã®ã¾ã¾å‡ºåŠ›
         	fw.write(ResourceAccessService.getCSSContents());
         } catch(IOException e) {
         	ServiceLogger.error("Fail to create FileWriter object. Target Path: " + cssPath.toString());
@@ -93,30 +93,30 @@ public class HTMLService extends CommonFileAccessService {
 	}
 
 	/**
-	 * ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ“à‚Ìƒf[ƒ^‚ğ‚à‚Æ‚ÉƒŒƒ|[ƒgƒy[ƒW‚ğì¬‚·‚éB
-	 * @throws IOException ƒŒƒ|[ƒgƒy[ƒW‚Ìì¬‚É¸”s
+	 * ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚‚ã¨ã«ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã‚’ä½œæˆã™ã‚‹ã€‚
+	 * @throws IOException ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®ä½œæˆã«å¤±æ•—
 	 */
 	public void createHTML() throws IOException {
-		// ƒCƒ“ƒfƒbƒNƒXî•ñ
+		// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æƒ…å ±
 		IndexInfo idx = null;
 		for(int i = 0; i < indexInfo.size(); i++) {
-			// ƒT[ƒrƒX‚Ì¶¬
+			// ã‚µãƒ¼ãƒ“ã‚¹ã®ç”Ÿæˆ
 			idx = indexInfo.get(i);
 			DataFileAccessService dataFiles = new DataFileAccessService(idx.getDirPath());
 			InfoAccessService info = new InfoAccessService(dataFiles.getInfo());
 
-			// HTMLƒeƒ“ƒvƒŒ[ƒg‚Ì“à—e‚ğæ“¾
-	    	contents = ResourceAccessService.getHTMLContents();
+			// HTMLãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å†…å®¹ã‚’å–å¾—
+	    	htmlContents = ResourceAccessService.getHTMLContents();
 
-	    	setTitle(idx.getTitle());	// ƒ^ƒCƒgƒ‹‚ğ’uŠ·
-	    	setLink(i);						// ƒŠƒ“ƒN‚ğ’uŠ·
-	    	setTable(info);				// ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚ğ’uŠ·
-	    	setImages(dataFiles);		// ‰æ‘œ‚ğ’uŠ·
-	    	setComment(info);		// ƒRƒƒ“ƒg‚ğ’uŠ·
+	    	setTitle(idx.getTitle());	// ã‚¿ã‚¤ãƒˆãƒ«ã‚’ç½®æ›
+	    	setLink(i);					// ãƒªãƒ³ã‚¯ã‚’ç½®æ›
+	    	setTable(info);				// ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ç½®æ›
+	    	setImages(dataFiles);		// ç”»åƒã‚’ç½®æ›
+	    	setComment(info);			// ã‚³ãƒ¡ãƒ³ãƒˆã‚’ç½®æ›
 
-	    	// ƒŒƒ|[ƒgƒy[ƒW‚Ìo—Í
+	    	// ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®å‡ºåŠ›
 	    	try(FileWriter fw = new FileWriter(idx.getPath())) {
-	    		fw.write(contents);
+	    		fw.write(htmlContents);
 	    	} catch(IOException e) {
 	    		ServiceLogger.error("Fail to create FileWriter object. Target Path: " + idx.getPath().toString());
 	    		throw e;
@@ -126,62 +126,62 @@ public class HTMLService extends CommonFileAccessService {
 
 	private void setTitle(String title) {
 		String target = Replace.TAG.get() + Replace.TITLE.get() + Replace.TAG.get();
-		contents = contents.replaceAll(target, title);
+		htmlContents = htmlContents.replaceAll(target, title);
 	}
 
 	private void setLink(int index) {
-		// ’uŠ·‘ÎÛ•¶š—ñ
+		// ç½®æ›å¯¾è±¡æ–‡å­—åˆ—
 		String targetPrev = Replace.TAG.get() + Replace.PREV.get() + Replace.TAG.get();
 		String targetNext = Replace.TAG.get() + Replace.NEXT.get() + Replace.TAG.get();
-		// ƒŠƒ“ƒNæƒtƒ@ƒCƒ‹‚ÌƒpƒX
-		// TOP‚Ìƒy[ƒW‚È‚çuPREVv‚Í‘¶İ‚µ‚È‚¢
+		// ãƒªãƒ³ã‚¯å…ˆãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
+		// TOPã®ãƒšãƒ¼ã‚¸ãªã‚‰ã€ŒPREVã€ã¯å­˜åœ¨ã—ãªã„
 		String prev = index == 0 ? Common.EMPTY.get() : ConstSet.FilePath.CURRENT.get() +
 									indexInfo.get(index - 1).getTitle() + Extension.HTML.get();
-		// ÅŒã‚Ìƒy[ƒW‚È‚çuNEXTv‚Í‘¶İ‚µ‚È‚¢
+		// æœ€å¾Œã®ãƒšãƒ¼ã‚¸ãªã‚‰ã€ŒNEXTã€ã¯å­˜åœ¨ã—ãªã„
 		String next = index == indexInfo.size() - 1 ? Common.EMPTY.get() : ConstSet.FilePath.CURRENT.get() +
 									indexInfo.get(index + 1).getTitle() + Extension.HTML.get();
-		// ’uŠ·Às
+		// ç½®æ›å®Ÿè¡Œ
 		if(index != 0 && index != (indexInfo.size() - 1))
-			contents = contents.replaceAll(targetPrev, prev)
+			htmlContents = htmlContents.replaceAll(targetPrev, prev)
 							   .replaceAll(targetNext, next);
 		else if(index == 0)
-			contents = contents.replaceAll(targetPrev, Common.EMPTY.get())
+			htmlContents = htmlContents.replaceAll(targetPrev, Common.EMPTY.get())
 							   .replaceAll(targetNext, next);
 		else if(index == (indexInfo.size() - 1))
-			contents = contents.replaceAll(targetPrev, prev)
+			htmlContents = htmlContents.replaceAll(targetPrev, prev)
 							   .replaceAll(targetNext, Common.EMPTY.get());
 	}
 
 	private void setTable(InfoAccessService info) {
-		// ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_‚ğ’uŠ·
+		// ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ã‚’ç½®æ›
 		info.getHeaders().forEach((key, val) -> {
 			String target = Replace.TAG.get() + key + Replace.TAG.get();
 			String value  = val;
-			contents = contents.replaceAll(target, value);
+			htmlContents = htmlContents.replaceAll(target, value);
 		});
-		// ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ì’l‚ğ’uŠ·
+		// ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®å€¤ã‚’ç½®æ›
 		info.getValues().forEach((key, val) -> {
 			String target = Replace.TAG.get() + key + Replace.TAG.get();
 			String value  = val == null ? Common.EMPTY.get() : val;
-			contents = contents.replaceAll(target, value);
+			htmlContents = htmlContents.replaceAll(target, value);
 		});
 	}
 
 	private void setImages(DataFileAccessService dataFiles) {
 		String target = Replace.TAG.get() + Replace.IMAGE.get() + Replace.TAG.get();
 		dataFiles.getImages().forEach(p -> {
-			contents = contents.replaceFirst(target,
+			htmlContents = htmlContents.replaceFirst(target,
 					p.toString().replaceAll(Regex.ESCAPE.get(), ConstSet.FilePath.SEPARATOR.get()));
 		});
 	}
 
 	private void setComment(InfoAccessService info) {
 		String target = Replace.TAG.get() + Replace.COMMENT.get() + Replace.TAG.get();
-		contents = contents.replaceAll(target, info.getComment());
+		htmlContents = htmlContents.replaceAll(target, info.getComment());
 	}
 
 	/**
-	 * ƒŒƒ|[ƒgƒy[ƒW‚ÌƒCƒ“ƒfƒbƒNƒXî•ñB
+	 * ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æƒ…å ±ã€‚
 	 */
 	class IndexInfo {
 
@@ -190,10 +190,10 @@ public class HTMLService extends CommonFileAccessService {
 		private String path  = "";
 
 		/**
-		 * ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		 * @param d ƒf[ƒ^ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX
-		 * @param t ƒŒƒ|[ƒgƒy[ƒW‚Ìƒ^ƒCƒgƒ‹
-		 * @param p ƒŒƒ|[ƒgƒy[ƒW‚ÌƒpƒX
+		 * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		 * @param d ãƒ‡ãƒ¼ã‚¿ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹
+		 * @param t ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®ã‚¿ã‚¤ãƒˆãƒ«
+		 * @param p ãƒ¬ãƒãƒ¼ãƒˆãƒšãƒ¼ã‚¸ã®ãƒ‘ã‚¹
 		 */
 		public IndexInfo(Path d, String t, String p) {
 			dir = d;

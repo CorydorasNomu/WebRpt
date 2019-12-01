@@ -1,0 +1,98 @@
+@startuml
+
+title ClassDiagram
+
+class Const {
+    + enum FilePath
+    + enum Extension
+    + enum Regex
+    + enum Common
+    + enum TABLE_HEADER
+    + enum TABLE_VALUE
+}
+
+class ServiceActivator {
+    + static main()
+}
+
+class ServiceLogger {
+    + static init()
+    + static terminate()
+    + static info(String meg)
+    + static warn(String meg)
+    + static error(String meg)
+}
+
+class ConfigAccessService {
+    + static init()
+    + static getWorkingDirPath()
+    + static getParamTableHeaders()
+}
+
+class ReportServiceMgr {
+    + create()
+    - getReportDirPath()
+    - createDirectory()
+}
+
+class CommonFileAccessService {
+    + static getLines(String path)
+}
+
+class HTMLService {
+    - ArrayList<IndexInfo> indexInfo
+    - String htmlContents
+    + createIndex(Stream dir)
+    + createCSS()
+    + createHTML()
+    - setTitle()
+    - setLink()
+    - setTable(InfoAccessService)
+    - setImages(DataFileAccessService)
+    - setComment(InfoAccessService)
+}
+
+class DataFileAccessService {
+    + getInfo()
+    + getImages()
+    - init()
+}
+
+class InfoAccessService {
+    + getHeaders()
+    + getValues()
+    + getComments()
+    - initValues()
+    - initComment()
+}
+
+class ResourceAccessService {
+    + static getHTMLContents()
+    + static getCSSContents()
+    - static convert(InputStream input)
+}
+
+note left of ServiceActivator
+    エントリポイント
+end note
+note bottom of Const
+    固定文字列を外部化して
+    enumで管理。各クラスから
+    共通で参照される
+end note
+note bottom of ServiceLogger
+    各クラスのメソッドが共通で
+    使用するログ出力クラス
+end note
+ServiceActivator -> ServiceLogger
+ConfigAccessService --|> CommonFileAccessService
+ServiceActivator --> ConfigAccessService
+ServiceActivator --> ReportServiceMgr
+ReportServiceMgr -> ConfigAccessService
+CommonFileAccessService <|-- InfoAccessService
+ReportServiceMgr --> HTMLService
+HTMLService --> DataFileAccessService
+HTMLService -> InfoAccessService
+HTMLService --> ResourceAccessService
+
+@enduml

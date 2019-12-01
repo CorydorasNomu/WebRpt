@@ -7,44 +7,44 @@ import java.util.ArrayList;
 
 import com.nmr.app.log.ServiceLogger;
 import com.nmr.app.util.ConstSet;
-import com.nmr.app.util.ConstSet.Extension;
 import com.nmr.app.util.ConstSet.Common;
+import com.nmr.app.util.ConstSet.Extension;
 
 /**
- * İ’èƒtƒ@ƒCƒ‹"config.ini"‚Ö‚ÌƒAƒNƒZƒTƒNƒ‰ƒXB
+ * è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«"config.ini"ã¸ã®ã‚¢ã‚¯ã‚»ã‚µã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
 public class ConfigAccessService extends CommonFileAccessService {
 
-	// İ’èƒtƒ@ƒCƒ‹‚ÌƒpƒX
+	// è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
 	private static final String CONFIG_INI = ConstSet.FilePath.CURRENT.get() + "config" + Extension.INI.get();
-	// ì‹ÆƒfƒBƒŒƒNƒgƒŠƒpƒX‚ğ¯•Ê‚·‚é‚½‚ß‚ÌÚ“ª•¶š
+	// ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãƒ‘ã‚¹ã‚’è­˜åˆ¥ã™ã‚‹ãŸã‚ã®æ¥é ­æ–‡å­—
 	private static final String PATH_KEY = "path=";
-	// ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_ŒQ‚ğ¯•Ê‚·‚é‚½‚ß‚ÌÚ“ª•¶š
+	// ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ç¾¤ã‚’è­˜åˆ¥ã™ã‚‹ãŸã‚ã®æ¥é ­æ–‡å­—
 	private static final String TABLE_KEY = "table=";
-	// ì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX
+	// ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹
 	private static String path = Common.EMPTY.get();
-	// ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_ŒQ
+	// ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ç¾¤
 	private static ArrayList<String> tableHeaders = new ArrayList<>();
 
 	/**
-	 * ‰Šú‰»Bconfig.ini‚ğ‰ğÍ
+	 * åˆæœŸåŒ–ã€‚config.iniã‚’è§£æ
 	 */
 	public static void init() throws IOException {
 		try {
 			getLines(CONFIG_INI).forEach(s -> {
 				if(s.startsWith(PATH_KEY)) {
-					// ì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚ğæ“¾
+					// ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹ã‚’å–å¾—
 					path = s.replaceFirst(PATH_KEY, Common.EMPTY.get()).trim();
 				} else if(s.startsWith(TABLE_KEY)) {
-					// ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_‚ğæ“¾
+					// ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ã‚’å–å¾—
 					String[] arrays = s.replaceFirst(TABLE_KEY, Common.EMPTY.get()).trim().split(Common.COMMA.get());
 					for(String r : arrays) {
 						tableHeaders.add(r.trim());
 					}
 				}
-	        });
+			});
 		} catch(IOException e) {
 			ServiceLogger.error("Fail to parse the ini file.");
 			throw e;
@@ -52,16 +52,16 @@ public class ConfigAccessService extends CommonFileAccessService {
 	}
 
 	/**
-	 * ì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚ğæ“¾B
-	 * @return ì‹ÆƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX
+	 * ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹ã‚’å–å¾—ã€‚
+	 * @return ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ‘ã‚¹
 	 */
 	public static Path getWorkingDirPath() {
 		return Paths.get(path);
 	}
 
 	/**
-	 * ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_‚ğæ“¾B
-	 * @return ƒpƒ‰ƒƒ^ƒe[ƒuƒ‹‚Ìƒwƒbƒ_‚ÌƒŠƒXƒg
+	 * ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ã‚’å–å¾—ã€‚
+	 * @return ãƒ‘ãƒ©ãƒ¡ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ˜ãƒƒãƒ€ã®ãƒªã‚¹ãƒˆ
 	 */
 	public static ArrayList<String> getParamTableHeaders() {
 		return tableHeaders;

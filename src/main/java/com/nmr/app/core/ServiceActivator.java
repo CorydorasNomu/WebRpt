@@ -7,7 +7,7 @@ import com.nmr.app.svc.ConfigAccessService;
 import com.nmr.app.svc.ReportServiceMgr;
 
 /**
- * ƒT[ƒrƒX‹N“®‚ÉŒÄ‚Ño‚³‚ê‚éƒNƒ‰ƒXB
+ * ã‚µãƒ¼ãƒ“ã‚¹èµ·å‹•æ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
@@ -15,17 +15,17 @@ public class ServiceActivator {
 
 	public static void main(String[] args) {
 		try {
-			// ƒƒOƒT[ƒrƒX‚Ì‰Šú‰»
+			// ãƒ­ã‚°ã‚µãƒ¼ãƒ“ã‚¹ã®åˆæœŸåŒ–
 			ServiceLogger.init();
 			ServiceLogger.info("WebRpt start.");
 
-			// ƒŒƒ|[ƒgì¬
+			// ãƒ¬ãƒãƒ¼ãƒˆä½œæˆ
 			new ReportServiceMgr().create(Files.list(ConfigAccessService.getWorkingDirPath()));
 
 		} catch (Throwable e) {
 			ServiceLogger.error("WebRpt interrupted incorrectly.", e);
 		} finally {
-			// ƒƒOƒT[ƒrƒX‚ğI—¹
+			// ãƒ­ã‚°ã‚µãƒ¼ãƒ“ã‚¹ã‚’çµ‚äº†
 			ServiceLogger.info("WebRpt end.");
 			ServiceLogger.terminate();
 		}

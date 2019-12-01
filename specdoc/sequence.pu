@@ -1,0 +1,141 @@
+@startuml
+
+title SequenceDiagram
+
+''' ライフライン
+actor User
+participant ServiceActivator
+participant ServiceLogger
+participant ConfigAccessService
+participant ReportServiceMgr
+participant HTMLService
+participant ResourceAccessService
+participant DataFileAccessService
+participant InfoAccessService
+participant CommonFileAccessService #aqua
+
+''' jar実行
+User -> ServiceActivator: 起動
+activate ServiceActivator
+
+''' サービスマネージャの初期処理
+ServiceActivator -> ServiceLogger: init()
+create ReportServiceMgr
+ServiceActivator -> ReportServiceMgr: << new >>
+activate ReportServiceMgr
+    ReportServiceMgr -> ConfigAccessService: init()
+    activate ConfigAccessService
+        ConfigAccessService -> CommonFileAccessService: getLines(String path)
+        activate CommonFileAccessService
+            note right : config.ini\n内容を解析
+        deactivate CommonFileAccessService
+    deactivate ConfigAccessService
+deactivate ReportServiceMgr
+
+ServiceActivator -> ConfigAccessService: getWorkingDirPath()
+activate ConfigAccessService
+    ServiceActivator <-- ConfigAccessService: 作業ディレクトリのパス
+deactivate ConfigAccessService
+
+''' レポート作成開始
+ServiceActivator -> ReportServiceMgr: create
+activate ReportServiceMgr
+
+    ReportServiceMgr -> ReportServiceMgr
+    note right : レポート出力\nディレクトリ作成
+    create HTMLService
+    ReportServiceMgr -> HTMLService: << new >>
+
+    ReportServiceMgr -> HTMLService: createIndex(Strema<path> dirStream)
+    activate HTMLService
+        note right : インデックス情報の作成\n- path for data directory\n- Title of report page\n- Path for report page
+    deactivate HTMLService
+
+    ''' CSS
+    ReportServiceMgr -> HTMLService: createCSS()
+    activate HTMLService
+        HTMLService -> ResourceAccessService: getCSSContents()
+        activate ResourceAccessService
+            note right : CSSテンプレート読み込み
+            HTMLService <-- ResourceAccessService
+        deactivate ResourceAccessService
+    deactivate HTMLService
+
+    ''' HTML
+    ReportServiceMgr -> HTMLService: crerateHTML()
+    activate HTMLService
+        note right : HTMLの動的生成
+        create DataFileAccessService
+        HTMLService -> DataFileAccessService: << new >>
+        note right : データディレクトリ内の\nファイル解析
+        activate DataFileAccessService
+            DataFileAccessService -> DataFileAccessService: init()
+            activate DataFileAccessService
+            deactivate DataFileAccessService
+        deactivate DataFileAccessService
+
+''' InfoAccessServiceの初期化
+        create InfoAccessService
+        HTMLService -> InfoAccessService: << new >>
+        note right : "info.txt"の内容解析
+        activate InfoAccessService
+            InfoAccessService -> InfoAccessService: initValues()
+            activate InfoAccessService
+            deactivate InfoAccessService
+            InfoAccessService -> InfoAccessService: initComment()
+            activate InfoAccessService
+            deactivate InfoAccessService
+        deactivate InfoAccessService
+
+''' HTMLテンプレートの読み込み
+        HTMLService -> ResourceAccessService: getHTMLContents()
+        activate ResourceAccessService
+            note right : HTMLテンプレートの読み込み
+            HTMLService <-- ResourceAccessService
+        deactivate ResourceAccessService
+
+''' HTMLの内容の書き換え
+        HTMLService -> HTMLService: setTitle(String title)
+        activate HTMLService
+            note left : タイトルの設定
+        deactivate HTMLService
+        HTMLService -> HTMLService: setLink(String title)
+        activate HTMLService
+            note left : リンク設定
+        deactivate HTMLService
+        HTMLService -> HTMLService: setTable(String title)
+        activate HTMLService
+            note left : テーブル設定
+            HTMLService -> InfoAccessService: getHeaders()
+            activate InfoAccessService
+                HTMLService <-- InfoAccessService: テーブルのヘッダ
+            deactivate InfoAccessService
+            HTMLService -> InfoAccessService: getValues()
+            activate InfoAccessService
+                HTMLService <-- InfoAccessService: テーブルの値
+            deactivate InfoAccessService
+        deactivate HTMLService
+        HTMLService -> HTMLService: setImages(String title)
+        activate HTMLService
+            note left : 画像設定
+            HTMLService -> DataFileAccessService: getImages()
+            activate DataFileAccessService
+                HTMLService <-- DataFileAccessService: 画像
+            deactivate DataFileAccessService
+        deactivate HTMLService
+        HTMLService -> HTMLService: setComment(String title)
+        activate HTMLService
+            note left : コメント設定
+        deactivate HTMLService
+        HTMLService -> HTMLService: HTML書き出し
+
+''' アプリの終了
+    ReportServiceMgr <-- HTMLService
+    deactivate HTMLService
+
+ServiceActivator <-- ReportServiceMgr
+deactivate ReportServiceMgr
+User <-- ServiceActivator: レポート生成完了
+deactivate ServiceActivator
+
+@enduml

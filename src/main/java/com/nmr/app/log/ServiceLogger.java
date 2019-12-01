@@ -11,17 +11,17 @@ import com.nmr.app.util.ConstSet.Extension;
 import com.nmr.app.util.ConstSet.FilePath;
 
 /**
- * ‹¤’Ê‚ÌƒƒOƒT[ƒrƒXƒNƒ‰ƒXB
+ * å…±é€šã®ãƒ­ã‚°ã‚µãƒ¼ãƒ“ã‚¹ã‚¯ãƒ©ã‚¹ã€‚
  *
  * @author nomu.shunn
  */
 public class ServiceLogger {
 
-	// ƒƒOƒtƒ@ƒCƒ‹–¼
+	// ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«å
 	private static final String LOG_FILE = "svc";
-	// ƒƒOƒtƒ@ƒCƒ‹
+	// ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«
 	private static File logFile = null;
-	// ƒƒO“à—e‚ğ•Û‚·‚éƒoƒbƒtƒ@
+	// ãƒ­ã‚°å†…å®¹ã‚’ä¿æŒã™ã‚‹ãƒãƒƒãƒ•ã‚¡
 	private static StringBuilder logBuilder = null;
 
 	private enum Level {
@@ -41,21 +41,21 @@ public class ServiceLogger {
 	}
 
 	/**
-	 * ƒƒOƒT[ƒrƒX‚Ì‰Šú‰»
+	 * ãƒ­ã‚°ã‚µãƒ¼ãƒ“ã‚¹ã®åˆæœŸåŒ–
 	 */
 	public static void init() {
 		logFile = new File(FilePath.CURRENT.get() + LOG_FILE + Extension.LOG.get());
-		if (logFile != null && logFile.exists())	// Šù‚ÉƒƒOƒtƒ@ƒCƒ‹‚ª‚ ‚ê‚Îíœ
+		if (logFile != null && logFile.exists())	// æ—¢ã«ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Œã°å‰Šé™¤
 			logFile.delete();
-		logBuilder = new StringBuilder();		// ƒƒOƒoƒbƒtƒ@‚Ì¶¬
+		logBuilder = new StringBuilder();		// ãƒ­ã‚°ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 		info("ServiceLogger initialized successfully.");
 	}
 
 	/**
-	 * ƒƒOƒT[ƒrƒX‚ÌI—¹
+	 * ãƒ­ã‚°ã‚µãƒ¼ãƒ“ã‚¹ã®çµ‚äº†
 	 */
 	public static void terminate() {
-		// ƒoƒbƒtƒ@ƒŠƒ“ƒO‚³‚ê‚Ä‚¢‚éƒƒO“à—e‚Ì‘‚«o‚µ
+		// ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°ã•ã‚Œã¦ã„ã‚‹ãƒ­ã‚°å†…å®¹ã®æ›¸ãå‡ºã—
 		try(FileWriter w = new FileWriter(logFile)) {
 			w.write(logBuilder.toString());
 		} catch(IOException e) {
@@ -64,32 +64,32 @@ public class ServiceLogger {
 	}
 
 	/**
-	 * INFOƒŒƒxƒ‹‚ÌƒƒO“à—e‚ğƒoƒbƒtƒ@‚É‘‚«‚ŞB
-	 * @param msg ƒƒbƒZ[ƒW
+	 * INFOãƒ¬ãƒ™ãƒ«ã®ãƒ­ã‚°å†…å®¹ã‚’ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€ã€‚
+	 * @param msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 	 */
 	public static void info(String msg) {
 		create(Level.INFO.get() + msg);
 	}
 
 	/**
-	 * WARNƒŒƒxƒ‹‚ÌƒƒO“à—e‚ğƒoƒbƒtƒ@‚É‘‚«‚ŞB
-	 * @param msg ƒƒbƒZ[ƒW
+	 * WARNãƒ¬ãƒ™ãƒ«ã®ãƒ­ã‚°å†…å®¹ã‚’ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€ã€‚
+	 * @param msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 	 */
 	public static void warn(String msg) {
 		create(Level.WARN.get() + msg);
 	}
 
 	/**
-	 * ERRORƒŒƒxƒ‹‚ÌƒƒO“à—e‚ÆƒgƒŒ[ƒX‚ğƒoƒbƒtƒ@‚É‘‚«‚ŞB
-	 * @param msg ƒƒbƒZ[ƒW
+	 * ERRORãƒ¬ãƒ™ãƒ«ã®ãƒ­ã‚°å†…å®¹ã¨ãƒˆãƒ¬ãƒ¼ã‚¹ã‚’ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€ã€‚
+	 * @param msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 	 */
 	public static void error(String msg) {
 		create(Level.ERROR.get() + msg);
 	}
 
 	/**
-	 * ERRORƒŒƒxƒ‹‚ÌƒƒO“à—e‚ÆƒgƒŒ[ƒX‚ğƒoƒbƒtƒ@‚É‘‚«‚ŞB
-	 * @param msg ƒƒbƒZ[ƒW
+	 * ERRORãƒ¬ãƒ™ãƒ«ã®ãƒ­ã‚°å†…å®¹ã¨ãƒˆãƒ¬ãƒ¼ã‚¹ã‚’ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€ã€‚
+	 * @param msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 	 */
 	public static void error(String msg, Throwable t) {
 		create(Level.ERROR.get() + msg);
@@ -97,8 +97,8 @@ public class ServiceLogger {
 	}
 
 	/**
-	 * ƒXƒ^ƒbƒNƒgƒŒ[ƒX‚Ì“à—e‚ğƒoƒbƒtƒ@‚É‘‚«‚ŞB
-	 * @param e ƒXƒ^ƒbƒNƒgƒŒ[ƒX
+	 * ã‚¹ã‚¿ãƒƒã‚¯ãƒˆãƒ¬ãƒ¼ã‚¹ã®å†…å®¹ã‚’ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€ã€‚
+	 * @param e ã‚¹ã‚¿ãƒƒã‚¯ãƒˆãƒ¬ãƒ¼ã‚¹
 	 */
 	public static void trace(Throwable t) {
 		logBuilder.append(t.toString() + Common.NEW_LINE.get());
@@ -109,11 +109,11 @@ public class ServiceLogger {
 	}
 
 	private static String timeStamp() {
-		// Œ»İ
+		// ç¾åœ¨æ™‚åˆ»
 		Date stamp = new Date(System.currentTimeMillis());
-		// ƒƒO‚Ì“ú•t•”‚ğ¶¬
+		// ãƒ­ã‚°ã®æ—¥ä»˜éƒ¨ã‚’ç”Ÿæˆ
 		String date = new SimpleDateFormat(Common.LOG_TIMESTAMP_DATE.get()).format(stamp);
-		// ƒƒO‚ÌŠÔ•”‚ğ¶¬
+		// ãƒ­ã‚°ã®æ™‚é–“éƒ¨ã‚’ç”Ÿæˆ
 		String time = new SimpleDateFormat(Common.LOG_TIMESTAMP_TIME.get()).format(stamp);
 
 		return date + Common.SPACE.get() + time + Common.SPACE.get();
