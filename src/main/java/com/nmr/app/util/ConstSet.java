@@ -1,6 +1,7 @@
 package com.nmr.app.util;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 汎用的に使用される定数を管理するクラス。
@@ -9,136 +10,88 @@ import java.util.ArrayList;
  */
 public class ConstSet {
 
-	public enum FilePath {
-		CURRENT("./"),
-		SEPARATOR("/");
+    public static final String UTF8 = "UTF-8";
 
-		private final String str;
+    public static final List<String> TableHeaderTags = Arrays.asList(
+        "HEADER_0",
+        "HEADER_1",
+        "HEADER_2",
+        "HEADER_3",
+        "HEADER_4",
+        "HEADER_5",
+        "HEADER_6",
+        "HEADER_7",
+        "HEADER_8"
+    );
 
-		private FilePath(String s) {
-			str = s;
-		}
-		public String get() {
-			return str;
-		}
-	}
+    public static final List<String> TableValueTags = Arrays.asList(
+        "VAL_0",
+        "VAL_1",
+        "VAL_2",
+        "VAL_3",
+        "VAL_4",
+        "VAL_5",
+        "VAL_6",
+        "VAL_7",
+        "VAL_8"
+    );
 
-	public enum Extension {
-		HTML(".html"),
-		CSS(".css"),
-		JPG(".jpg"),
-		PNG(".png"),
-		INI(".ini"),
-		TXT(".txt"),
-		LOG(".log");
+    public static final List<String> ImagePathTag = Arrays.asList(
+        "%img00%",
+        "%img01%"
+    );
 
-		private final String str;
+    public enum Symbol {
+        CURRENT("./"),
+        SEPARATOR("/"),
+        ESCAPE("\\\\"),
+        SPACE(" "),
+        EMPTY(""),
+        COMMA(","),
+        TAB("\t"),
+        NEW_LINE(System.lineSeparator());
 
-		private Extension(String s) {
-			str = s;
-		}
-		public String get() {
-			return str;
-		}
-	}
+        private final String symbol;
 
-	public enum Regex {
-		ESCAPE("\\\\");
+        private Symbol(String s) {
+            symbol = s;
+        }
+        public String get() {
+            return symbol;
+        }
+    }
 
-		private final String str;
+    public enum Extension {
+        HTML(".html"),
+        CSS(".css"),
+        JPG(".jpg"),
+        PNG(".png"),
+        INI(".ini"),
+        TXT(".txt"),
+        LOG(".log");
 
-		private Regex(String s) {
-			str = s;
-		}
-		public String get() {
-			return str;
-		}
-	}
+        private final String ext;
 
-	public enum Common {
-		SPACE(" "),
-		EMPTY(""),
-		COMMA(","),
-		ATB("\t"),
-		NEW_LINE(System.lineSeparator()),
-		UTF8("UTF-8"),
-		DIR_TIMESTAMP("MMdd_HHmmss"),
-		LOG_TIMESTAMP_DATE("yyy-MM-dd"),
-		LOG_TIMESTAMP_TIME("HH:mm:ss.SSS");
+        private Extension(String s) {
+            ext = s;
+        }
+        public String get() {
+            return ext;
+        }
+    }
 
-		private final String str;
+    public enum TimeStamp {
+        DIR("MMdd_HHmmss"),
+        DATE("yyy-MM-dd"),
+        TIME("HH:mm:ss.SSS");
 
-		private Common(String s) {
-			str = s;
-		}
-		public String get() {
-			return str;
-		}
-	}
+        private final String stamp;
 
-	public enum TABLE_HEADER {
-		HEADER_0("HEADER_0"),
-		HEADER_1("HEADER_1"),
-		HEADER_2("HEADER_2"),
-		HEADER_3("HEADER_3"),
-		HEADER_4("HEADER_4"),
-		HEADER_5("HEADER_5"),
-		HEADER_6("HEADER_6"),
-		HEADER_7("HEADER_7"),
-		HEADER_8("HEADER_8");
-
-		private final String str;
-
-		private TABLE_HEADER(String s) {
-			str = s;
-		}
-
-		/**
-		 * パラメタテーブルの値置換のためのキーリストを取得する。
-		 * @return ヘッダ置換のためのキーリスト
-		 */
-		public static ArrayList<String> get() {
-			ArrayList<String> keyList = new ArrayList<>();
-			for (TABLE_HEADER num : values()) {
-	            keyList.add(num.val());
-	        }
-			return keyList;
-		}
-		private String val() {
-			return str;
-		}
-	}
-
-	public enum TABLE_VALUE {
-		VAL_0("VAL_0"),
-		VAL_1("VAL_1"),
-		VAL_2("VAL_2"),
-		VAL_3("VAL_3"),
-		VAL_4("VAL_4"),
-		VAL_5("VAL_5"),
-		VAL_6("VAL_6"),
-		VAL_7("VAL_7"),
-		VAL_8("VAL_8");
-
-		private final String str;
-
-		private TABLE_VALUE(String s) {
-			str = s;
-		}
-
-		/**
-		 * パラメタテーブルのヘッダ置換のためのキーリストを取得する。
-		 * @return ヘッダ置換のためのキーリスト
-		 */
-		public static ArrayList<String> get() {
-			ArrayList<String> keyList = new ArrayList<>();
-			for (TABLE_VALUE num : values()) {
-	            keyList.add(num.val());
-	        }
-			return keyList;
-		}
-		private String val() {
-			return str;
-		}
-	}
+        private TimeStamp(String s) {
+            stamp = s;
+        }
+        public String get() {
+            return stamp;
+        }
+    }
 }

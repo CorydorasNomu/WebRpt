@@ -49,5 +49,4 @@ PARAMS:${xxx} ${xxx} ${xxx}...
 - ![シーケンス図](./specdoc/sequence/SequenceDiagram.png)
 
 ## その他の制限事項
-- Windowsではアプリ実行時のエンコードが`MS932`らしく、`UTF-8`のマルチバイト文字が壊れる。  
 - 最終ページの`NEXT`ボタンを押すと、ないはずの次ページを開いてしまう。  
